@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <title>Fligle</title>
+  <style>
+    html, body, #map-canvas {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+</head>
+<body>
+  <div id="map-canvas"></div>
+<script type="text/javascript">
+  var map;
+  var ugly;
+
+  function jsonFlickrApi(rsp) {
+
+    if (rsp.stat != "ok") {
+      return;
+    }
+
+    var mapOptions = {
+      zoom: 17,
+      center: new google.maps.LatLng(-23.5282468,-46.6399878)
+    }
+
+    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+    var photos = rsp.photoset.photo;
+
+    for (var i = 0; i < photos.length; i++) {
+      var photo = photos[i];
+
+      //var infoWindow = new google.maps.InfoWindow({
+      //  content: '<div><img src="https://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_z.jpg"></img><br>' + photo.title + '</div>'
+      //});
+
+      var marker = new google.maps.Marker({
+        position: new google.maps.LatLng(photo.latitude, photo.longitude),
+        map: map,
+        title: photo.title,
+        //infoWindow: infoWindow,
+        photoId: photo.id,
+        photoSecret: photo.secret
+      });
+
+      google.maps.event.addListener(marker, "click", function(){
+        ugly = this;
+        var script = document.createElement('script');
+        script.src = "https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=dcb450d29e22a7118db506f2ff11e67c&photo_id=" + this.photoId + "&secret=" + this.photoSecret + "&format=json&jsoncallback=wooYay";
+        document.body.appendChild(script);
+        document.body.removeChild(script);
+
+        //this.infoWindow.open(map, this);
+      });
+    }
+  }
+
+  function wooYay(rsp) {
+    if (rsp.stat != "ok") {
+      return;
+    }
+
+    var photo = rsp.photo;
+
+    var infoWindow = new google.maps.InfoWindow({
+      content: '<div><img src="https://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_z.jpg"></img><br>' + photo.description._content + '</div>'
+    });
+    infoWindow.open(map, ugly);
+
+  }
+</script>
+<script src="https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=b32af5ea23df88f232df54c1a3a97497&photoset_id=72157656213784372&user_id=49414881%40N05&extras=geo&format=json"></script>
+</body>
+</html>
