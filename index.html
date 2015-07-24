@@ -30,12 +30,10 @@
 <script type="text/javascript">
   var flickrApiKey = "5516573a7093945b52b58bf2eccf678c";
   var map;
-  var ugly;
+  var activeMarker;
 
   function jsonFlickrApi(rsp) {
-
     if (rsp.stat != "ok") {
-      logFailure(rsp);
       return;
     }
 
@@ -60,43 +58,44 @@
       });
 
       google.maps.event.addListener(marker, "click", function(){
-        ugly = this;
-        var script = document.createElement('script');
-        script.src = "https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=" + flickrApiKey + "&photo_id=" + this.photoId + "&secret=" + this.photoSecret + "&format=json&jsoncallback=wooYay";
-        document.body.appendChild(script);
-        document.body.removeChild(script);
+        activeMarker = this;
+        runJsonp("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=" + flickrApiKey + "&photo_id=" + this.photoId + "&secret=" + this.photoSecret + "&format=json&jsoncallback=openInfoWindow");
       });
     }
   }
 
-  function wooYay(rsp) {
+  var infoWindow = new google.maps.InfoWindow({
+    content: ""
+  });
+  function openInfoWindow(rsp) {
     if (rsp.stat != "ok") {
-      logFailure(rsp);
       return;
     }
 
     var photo = rsp.photo;
 
-    var infoWindow = new google.maps.InfoWindow({
-      content: '<div><img src="https://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_z.jpg"></img><br>' + photo.description._content + '</div>'
-    });
-    infoWindow.open(map, ugly);
+    infoWindow.setContent('<div><img src="https://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_' + getSizeSuffix() + '.jpg"></img><br>' + photo.description._content + '</div>');
+    infoWindow.open(map, activeMarker);
   }
 
-  function logFailure(rsp) {
-    var p = document.createElement("p");
-    p.Text = "stat: " + rsp.stat + "<br/>code: " + rsp.err.code + "<br/>msg: " + rsp.err.msg;
-    document.body.appendChild(p);
-  }
-
-  function runScript(src){
+  function runJsonp(src){
     var script = document.createElement('script');
     script.src = src;
     document.body.appendChild(script);
     document.body.removeChild(script);
   }
 
-  runScript("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=" + flickrApiKey + "&photoset_id=72157656213784372&user_id=49414881%40N05&extras=geo&format=json");
+  var sizeSuffixes = [[100, 't'], [240, 'm'], [320, 'n'], [500, '-'], [640, 'z'], [800, 'c'], [1024, 'b'], [1600, 'h'], [2048, 'k']];
+  function getSizeSuffix() {
+      var sizeSuffix = 't';
+      var imageLongestSide = Math.min(document.documentElement.clientWidth, document.documentElement.clientHeight);
+      for (var i = 0; i < sizeSuffixes.length && imageLongestSide > sizeSuffixes[i][0]; i++) {
+        sizeSuffix = sizeSuffixes[i][1];
+      }
+      return sizeSuffix;
+  }
+
+  runJsonp("https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=" + flickrApiKey + "&photoset_id=72157656213784372&user_id=49414881%40N05&extras=geo&format=json");
 </script>
 </body>
 </html>
