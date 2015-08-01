@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <title>Fligle</title>
+  <style>
+    html, body, #map-canvas {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+  <!-- Google Analytics -->
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-61202332-9', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+  <!-- End Google Analytics -->
+</head>
+<body>
+  <div id="map-canvas"></div>
+  <script type="text/javascript">
+    var photoset_id = "72157656213784372";
+    var user_id = "49414881%40N05";
+
+    var mapOptions = {
+      zoom: 17,
+      center: new google.maps.LatLng(-23.5282468,-46.6399878)
+    }
+  </script>
+
+<script src="fligle.js"></script>  
+</body>
+</html>
