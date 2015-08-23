@@ -1,5 +1,5 @@
   var api_key = "5516573a7093945b52b58bf2eccf678c";
-  var sizeSuffixes = [[100, 't'], [240, 'm'], [320, 'n'], [500, '-'], [640, 'z'], [800, 'c'], [1024, 'b'], [1600, 'h'], [2048, 'k']];
+  var sizeSuffixes = [[100, 't'], [240, 'm'], [320, 'n'], [640, 'z'], [800, 'c'], [1024, 'b']];
 
   var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
   var activeMarker;
@@ -20,7 +20,7 @@
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
         map: map,
-        title: photo.title._content,
+        title: photo.title,
         photoId: photo.id,
         photoSecret: photo.secret
       });
