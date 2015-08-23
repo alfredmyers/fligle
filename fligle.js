@@ -20,7 +20,7 @@
       var marker = new google.maps.Marker({
         position: new google.maps.LatLng(photo.latitude, photo.longitude),
         map: map,
-        title: photo.title,
+        title: photo.title._content,
         photoId: photo.id,
         photoSecret: photo.secret
       });
@@ -39,7 +39,7 @@
 
     var photo = rsp.photo;
 
-    infoWindow.setContent('<div><img src="https://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_' + getSizeSuffix() + '.jpg"></img><br>' + photo.description._content + '</div>');
+    infoWindow.setContent('<div><img src="https://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_' + getSizeSuffix() + '.jpg"></img><br>' + photo.title._content + '</div>');
     infoWindow.open(map, activeMarker);
   }
 
