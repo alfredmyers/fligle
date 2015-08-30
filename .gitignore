@@ -1,1 +1,4 @@
 PageSpeedInsights
+node_modules
+dist
+.tmp

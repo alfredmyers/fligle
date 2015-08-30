@@ -1,5 +1,5 @@
   var api_key = "5516573a7093945b52b58bf2eccf678c";
-  var sizeSuffixes = [[100, 't'], [240, 'm'], [320, 'n'], [500, '-'], [640, 'z'], [800, 'c'], [1024, 'b'], [1600, 'h'], [2048, 'k']];
+  var sizeSuffixes = [[100, 't'], [240, 'm'], [320, 'n'], [640, 'z'], [800, 'c'], [1024, 'b']];
 
   var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
   var activeMarker;
@@ -39,7 +39,7 @@
 
     var photo = rsp.photo;
 
-    infoWindow.setContent('<div><img src="https://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_' + getSizeSuffix() + '.jpg"></img><br>' + photo.description._content + '</div>');
+    infoWindow.setContent('<div><img src="https://farm' + photo.farm + '.staticflickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_' + getSizeSuffix() + '.jpg"></img><br>' + photo.title._content + '</div>');
     infoWindow.open(map, activeMarker);
   }
 

@@ -28,15 +28,22 @@
 <body>
   <div id="map-canvas"></div>
   <script type="text/javascript">
-    var photoset_id = "72157656213784372";
+    var queryString = decodeURIComponent(window.location.search.substring(1)).split("&");
+    var args = {};
+    queryString.forEach(function(x) {
+      var pos = x.indexOf("=");
+      var values = x.substring(pos + 1);
+      args[x.substring(0, pos)] = (values.indexOf(",") == -1) ? values : values.split(",");
+    });
+
+    var photoset_id = args["psid"] || "72157656213784372";
     var user_id = "49414881%40N05";
 
     var mapOptions = {
-      zoom: 17,
-      center: new google.maps.LatLng(-23.5282468,-46.6399878)
+      zoom: parseFloat(args["z"]) || 17,
+      center: new google.maps.LatLng(parseFloat(args["lat"]) || -23.5282468, parseFloat(args["lng"]) || -46.6399878)
     }
   </script>
-
-<script src="fligle.js"></script>  
+<script src="fligle.js"></script>
 </body>
 </html>
