@@ -1,7 +1,7 @@
   var api_key = "5516573a7093945b52b58bf2eccf678c";
   var sizeSuffixes = [[100, 't'], [240, 'm'], [320, 'n'], [640, 'z'], [800, 'c'], [1024, 'b']];
 
-  var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+  var map = new google.maps.Map(document.getElementById("map-canvas"));
   var activeMarker;
   var infoWindow = new google.maps.InfoWindow({
     content: ""
@@ -14,11 +14,24 @@
 
     var photos = rsp.photoset.photo;
 
+    var bounds = {
+      ne: {lat: -90.0, lng: -180.0},
+      sw: {lat: 90.0, lng: 180.0}
+    };
+
     for (var i = 0; i < photos.length; i++) {
       var photo = photos[i];
+      var lat = parseFloat(photo.latitude);
+      var lng = parseFloat(photo.longitude);
+
+      //compute bounds
+      bounds.ne.lat = Math.max(bounds.ne.lat, lat);
+      bounds.ne.lng = Math.max(bounds.ne.lng, lng);
+      bounds.sw.lat = Math.min(bounds.sw.lat, lat);
+      bounds.sw.lng = Math.min(bounds.sw.lng, lng);
 
       var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(photo.latitude, photo.longitude),
+        position: {lat: lat, lng: lng},
         map: map,
         title: photo.title,
         photoId: photo.id,
@@ -30,6 +43,7 @@
         runJsonp("https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=" + api_key + "&photo_id=" + this.photoId + "&secret=" + this.photoSecret + "&format=json&jsoncallback=openInfoWindow");
       });
     }
+    map.fitBounds(new google.maps.LatLngBounds(bounds.sw, bounds.ne));
   }
 
   function openInfoWindow(rsp) {
