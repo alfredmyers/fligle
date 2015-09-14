@@ -28,6 +28,7 @@
 <body>
   <div id="map-canvas"></div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="fligle.js"></script>
   <script type="text/javascript">
     var queryString = decodeURIComponent(window.location.search.substring(1)).split("&");
     var args = {};
@@ -38,8 +39,10 @@
     });
 
     var photoset_id = args["psid"] || "72157656213784372";
-    var user_id = "49414881%40N05";
+    var user_id = "49414881@N05";
+    var api_key = "5516573a7093945b52b58bf2eccf678c";
+
+    yuma.mashups.fligle(api_key, user_id, photoset_id, "map-canvas");
   </script>
-<script src="fligle.js"></script>
 </body>
 </html>
