@@ -9,6 +9,10 @@ var yuma = {
         content: ""
       });
 
+      var clusterer = new MarkerClusterer(map);
+
+      var addMarker = "cluster" in args && args["cluster"] === "true" ? addMarkerToCluster : addMarkerToMap;
+
       $.getJSON(
         "https://api.flickr.com/services/rest/?jsoncallback=?",
         {
@@ -21,6 +25,14 @@ var yuma = {
         },
         onGetPhotos
       );
+
+      function addMarkerToCluster(marker) {
+        clusterer.addMarker(marker);
+      }
+
+      function addMarkerToMap(marker) {
+        marker.setMap(map);
+      }
 
       function onGetPhotos(rsp) {
         if (rsp.stat != "ok") {
@@ -47,11 +59,12 @@ var yuma = {
 
           var marker = new google.maps.Marker({
             position: {lat: lat, lng: lng},
-            map: map,
             title: photo.title,
             photoId: photo.id,
             photoSecret: photo.secret
           });
+
+          addMarker(marker);
 
           google.maps.event.addListener(marker, "click", function(){
             activeMarker = this;
